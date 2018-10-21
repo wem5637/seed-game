@@ -1,28 +1,8 @@
-point is to create a dom version of the game grow
+point is to create a dom version of the game seed
 
-ambiebnt game where flowers evolve over time
-there is an underlying data model for genetic qualities\
+ambient game where flowers evolve over time
+there is an underlying data model for genetic qualities
 
 with each passing generation the traits are carried over to new generation
 
 selectively breed plants and such!
-
-some basic traits
-
-color of:
-	petals
-	middle bulb
-	stem
-
-variety of colors:
-	in petals
-
-height
-
-
-seek middle between two
-
-inbreed
-
-
-
