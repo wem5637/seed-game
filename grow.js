@@ -1,9 +1,39 @@
+class DayFlower extends Flower{
+	constructor() {
+		super();
+		this.stemHeight = 5; 
+		this.stemWidth = 5;
+		this.stemColor = 'rgb(0,255,0)';
+		this.petalNum = 4;
+		this.petalSize = 5;
+		this.petalColor = 'rgb(255,0,0)';
+		this.petalVariety = 0;
+		this.bulbSize = 5;
+		this.bulbColor = 'rgb(255,255,255)';		
+	}
+}
+
+class NightFlower extends Flower{
+	constructor() {
+		super();
+		this.stemHeight = 2; 
+		this.stemWidth = 2;
+		this.stemColor = 'rgb(0,0,0)';
+		this.petalNum = 2;
+		this.petalSize = 5;
+		this.petalColor = 'rgb(255,0,255)';
+		this.petalVariety = 0;
+		this.bulbSize = 3;
+		this.bulbColor = 'rgb(255,0,0)';		
+	}
+}
+
 var plots = {
-	plot1: null,
-	plot2: new DayFlower(),
-	plot3: null,
-	plot4: new NightFlower(),
-	plot5: null
+	"0": null,
+	"1": new DayFlower(),
+	"2": null,
+	"3": new NightFlower(),
+	"4": null
 }
 
 var colorOscillator = function(rgb, key, inbreedBool){
@@ -62,12 +92,9 @@ var flowerBreedPropDiff = {
 	bulbColor: 40,
 }
 
-DayFlower.prototype = new Flower(5, 5, 'green', 4, 5, 'red', 0, 5, 'yellow')
-
-NightFlower.prototype = new Flower(2, 2, 'black', 2, 5, 'purple', 0, 3, 'red')
 
 
-class Flower(stemHeight, stemWidth, stemColor, petalNum, petalSize, petalColor, petalVariety, bulbSize, bulbColor){
+function Flower(stemHeight, stemWidth, stemColor, petalNum, petalSize, petalColor, petalVariety, bulbSize, bulbColor){
 	this.stemHeight = stemHeight; 
 	this.stemWidth = stemWidth;
 	this.stemColor = stemColor;
@@ -78,31 +105,29 @@ class Flower(stemHeight, stemWidth, stemColor, petalNum, petalSize, petalColor, 
 	this.bulbSize = bulbSize;
 	this.bulbColor = bulbColor;
 	this.breedCounter = 2;
+	this.id = Math.random()*1000000;
 }
+
 
 Flower.prototype.grow = function(){
 	//start grow animation
 }
 
 Flower.prototype.plant = function(flower){
-	//pick random plot
-	//replace flower with seed flower
 	var rand4 = Math.floor(Math.random()*4);
-	plots[rand4] = new Flower(flower);
-
+	plots[rand4] = Object.assign(new Flower(), flower);
 }
 
 Flower.prototype.inbreed = function(){
-	var keys = Object.keys(flower1)
+	var keys = Object.keys(this)
 	var flower = {}
 	keys.forEach((key)=>{
 		if(flowerBreedPropDiff[key]){
-			flower[key] = valueOscillator(flower1[key], key, true)
+			flower[key] = valueOscillator(this[key], key, true)
 		}
 	})
-
-	flower1.plant(flower);
-	flower1.destroy();
+	this.destroy();
+	this.plant(flower);
 }
 
 Flower.prototype.crossbreed = function(flower2){
@@ -118,20 +143,26 @@ Flower.prototype.crossbreed = function(flower2){
 	this.degrade();
 }
 
-Flower.prototype.decrementBreedCounter = function(flower){
+Flower.prototype.decrementBreedCounter = function(){
 	//decrement breed counter
-	flower.breedCounter = flower.breedCounter-1;
-	if(flower.breedCounter<=0){
-		flower.destroy();
+	this.breedCounter = this.breedCounter-1;
+	if(this.breedCounter<=0){
+		this.destroy();
 	}
 }
 
 
-Flower.prototype.degrade = function(flower){
+Flower.prototype.degrade = function(){
 	//decrement breed counter
-	flower1.decrementBreedCounter();
+	this.decrementBreedCounter();
 }
 
+Flower.prototype.destroy = function(){
+	var plotsKeys = Object.keys(plots)
 
-
-console.log(plots)
+	plotsKeys.forEach(plotKey=>{
+		if(plots[plotKey]&&plots[plotKey].id===this.id){
+			plots[plotKey]=null;
+		}
+	})
+}
